@@ -6,10 +6,12 @@ RUN php -r "if (hash_file('SHA384', 'composer-setup.php') === '93b54496392c06277
 RUN php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 RUN php -r "unlink('composer-setup.php');"
 
-
 # dépendances pour installation de symfony
 RUN apt update -y
 RUN apt install zip -y
 RUN apt install git -y
 
-CMD php -S 0.0.0.0:80 -t public
+ENV COMPOSER_HOME /tmp
+WORKDIR /opt/project
+
+CMD php -S 0.0.0.0:8000 -t public

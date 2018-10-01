@@ -20,10 +20,15 @@ vide il contient le Dockerfile, le README et le .git, nous allons donc créer le
 "project-tmp" par exemple
 
     $ mkdir project-tmp
-    $ docker run --rm -ti --name symfony -v `pwd`/project-tmp:/opt/project php:7.2-cli-symfony composer create-project symfony/skeleton /opt/project
-    
-Remarque: pour Windows remplacer `pwd` par C:\votre_repertoire_de_projet  
-Remarque: sous Unix les fichiers créé sont par defaut créé par l'user root, ajouter l'option -u $UID:$GROUPS
+        
+Sous *nix l'image est exécutée par defaut par l'user root, ajouter l'option -u $UID:$GROUPS pour que le squelette créé
+vous appartien
+
+    $ docker run --rm -ti --name symfony -u $UID:$GROUPS -v `pwd`/project-tmp:/opt/project php:7.2-cli-symfony composer create-project symfony/skeleton /opt/project
+ 
+Sous Windows remplacer `pwd` par C:\votre_repertoire_de_projet  
+
+    $ docker run --rm -ti --name symfony -v C:\votre_repertoire_de_projet:/opt/project php:7.2-cli-symfony composer create-project symfony/skeleton /opt/project/project-tmp
 
 Déplacer l'ensemble du squelette de votre nouveau projet dans le répertoire parent. Vous pouvez maintenant vérifier 
 que tout est fonctionnel. Remarquer le chemin choisit pour la localisation du projet dans le contenair docker, "/opt/project"
@@ -32,11 +37,11 @@ Dernière action lancez votre serveur de dev. Pour quitter un simple ^ctrl c suf
 l'url http://localhost avec votre navigateur.
 
     $ mv project-tmp/* .; mv project-tmp/.* .;rm -r project-tmp
-    $ docker run --rm -p 80:80 -ti --name symfony -v `pwd`:/opt/project -w /opt/project php:7.2-cli-symfony
+    $ docker run --rm -p 8000:8000 -ti --name symfony -u $UID:$GROUPS -v `pwd`:/opt/project -w /opt/project php:7.2-cli-symfony
     
 Optionnellement vous pouvez installer les des outils complémentaires
 
-    $ docker run --rm -p 80:80 -ti --name symfony -v `pwd`:/opt/project -w /opt/project php:7.2-cli-symfony composer require server --dev
+    $ docker run --rm -p 8000:8000 -ti --name symfony -u $UID:$GROUPS -v `pwd`:/opt/project -w /opt/project php:7.2-cli-symfony composer require server --dev
     
 ### Environnement de Dev avec une VM
 Vous pouvez travaillé en exécutant vos développements dans une VM. Les explications suivantes se font à partir d'une 
