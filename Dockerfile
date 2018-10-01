@@ -11,6 +11,10 @@ RUN apt update -y
 RUN apt install zip -y
 RUN apt install git -y
 
+RUN pecl install redis-4.0.1 \
+    && pecl install xdebug-2.6.0 \
+    && docker-php-ext-enable redis xdebug
+
 ENV COMPOSER_HOME /tmp
 WORKDIR /opt/project
 
