@@ -105,6 +105,10 @@ le réseau est configuré en NAT ce qui permet à la VM d'accéder à Internet m
 votre VM, changez la conf de la carte réseau de votre pour "réseau privé" ou ajoutez une deuxième carte avec "réseau privé"
 
     $ php -S ipDeLaVM:8000 -t $HOME/project/public
+    
+Ou via les utilitaires de Symfony (0.0.0.0 écoute toutes les interfaces à ne pas faire en prod)
+
+    $ php bin/console server:start 0.0.0.0:8000
  
 ### Déployer 
 Le déploiement de votre projet sur le serveur se fait en sftp. Le serveur tourne sous apache, Apache publie le repertoire 
