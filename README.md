@@ -42,7 +42,32 @@ l'url http://localhost avec votre navigateur.
 Optionnellement vous pouvez installer les des outils complémentaires
 
     $ docker run --rm -p 8000:8000 -ti --name symfony -u $UID:$GROUPS -v `pwd`:/opt/project -w /opt/project php:7.2-cli-symfony composer require server --dev
+### RUN/DEBUG 
+Le container docker créé ci-dessus éxécute par défaut la commande `php -S 0.0.0.0:8000 -t public` en fin de script. Cela
+lance le serveur web interne de php sur le port 8000 à l'écoute de toute les interfaces de votre poste de développement, 
+(l'option -t indique que la racine des doncuments plubliés et le répertoire _public_). 
+C'est suffisant comme configuration pour débuter, cependant symfony propose d'autres outils plus performant pour tester vos 
+développements, avec notament la possibilité de mettre en cache le résultat de contruction de page précédents.  
+Dans le répertoire bin créé de l'installation du squelette vous trouverez l'outil console. Il vous permettera, par exemple,
+de lancer un serveur Web `php bin/console server:start` de vider le cache `php bin/console cache:clear` ou encore plus
+sofistiqué de créer une entité `php bin/console generate:doctrine:entity`  
+Pour utiliser l'ensemble des outils de symfony un interpreteur de commande est donc nécessaire, lancer uniquement le container
+en mode serveur interne est trop limitatif, pour se faire il suffit de lancer votre container avec la commande qui vous
+intéresse exemple : 
+
+    $ docker run --rm -ti --name symfony_clear_cache -u $UID:$GROUPS -v `pwd`:/opt/project php:7.2-cli-symfony php bin/console clear:cache
     
+et ce sans arrêter l'éxécution de votre précédent container, (en gardant votre serveur web actif !).
+ Vous pouvez exécuter autant de container que vous vouler du moment qu'il n'utise pas les mêmes ressources 
+ (exemple le même port, si vous lancer deux container _serveur web_).  
+ Retenir toutes ses lignes 
+de commande peut devenir fastidieux, votre ide vous apportera alors une aide précieuse en vous offrant la possibilité de
+configurer des "run" menu _Run->Edit Configuration..._  L'exemple ci-dessous lance le serveur web symfony
+![panneau de configuration run/debug](./img/run_debug_configuration_start_server.png)
+Il vous suffira ensuite d'exécuter le container que vous désirer via le menu généré dans votre ide  
+![mennu run](./img/run_menu.png)
+
+Dans le cas ou vous choisissez d'éxécuter votre code dans une VM, tout ce qu'il vient d'être dit est transposable.
 ### Environnement de Dev avec une VM
 Vous pouvez travaillé en exécutant vos développements dans une VM. Les explications suivantes se font à partir d'une 
 VM sous linux et ont été testées avec "Ubuntu Server 18.04".  

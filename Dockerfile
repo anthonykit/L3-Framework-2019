@@ -18,4 +18,4 @@ RUN pecl install redis-4.0.1 \
 ENV COMPOSER_HOME /tmp
 WORKDIR /opt/project
 
-CMD php bin/console server:start 0.0.0.0:8000
+CMD php -S 0.0.0.0:8000 -t public
