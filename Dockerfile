@@ -11,6 +11,9 @@ RUN apt update -y
 RUN apt install zip -y
 RUN apt install git -y
 
+RUN apt install libicu-dev -y \
+    && docker-php-ext-install -j$(nproc) intl
+
 RUN pecl install redis-4.0.1 \
     && pecl install xdebug-2.6.0 \
     && docker-php-ext-enable redis xdebug
