@@ -12,7 +12,7 @@ versionnez votre code pour pouvoir revenir en arrière
 Le Dockerfile fournit permet de construire une image prête pour installer le framework Symfony. La première étape sera 
 de créer un projet et ses dépendances. On choisira par exemple un squelette minimum pour commencer, une approche pédagogique.
 
-    $ docker build -t php:7.2-cli-symfony .
+    $ docker build -t php-symfony .
     
 De cette image vous lancerez la création d'un projet en utilisant un script de composer officiel. En partant d'un projet
 vide vous n'auriez rencontrer qucun problème. Mais en partant d'un clone de ce dépôt votre dossier versionné n'est pas 
@@ -24,11 +24,11 @@ vide il contient le Dockerfile, le README et le .git, nous allons donc créer le
 Sous *nix l'image est exécutée par defaut par l'user root, ajouter l'option -u $UID:$GROUPS pour que le squelette créé
 vous appartien
 
-    $ docker run --rm -ti --name symfony -u $UID:$GROUPS -v `pwd`/project-tmp:/opt/project php:7.2-cli-symfony composer create-project symfony/skeleton /opt/project
+    $ docker run --rm -ti --name symfony -u $UID:$GROUPS -v `pwd`/project-tmp:/opt/project php-symfony composer create-project symfony/skeleton /opt/project
  
 Sous Windows remplacer `pwd` par C:\votre_repertoire_de_projet  
 
-    $ docker run --rm -ti --name symfony -v C:\votre_repertoire_de_projet:/opt/project php:7.2-cli-symfony composer create-project symfony/skeleton /opt/project/project-tmp
+    $ docker run --rm -ti --name symfony -v C:\votre_repertoire_de_projet:/opt/project php-symfony composer create-project symfony/skeleton /opt/project/project-tmp
 
 Déplacer l'ensemble du squelette de votre nouveau projet dans le répertoire parent. Vous pouvez maintenant vérifier 
 que tout est fonctionnel. Remarquer le chemin choisit pour la localisation du projet dans le contenair docker, "/opt/project"
@@ -37,11 +37,11 @@ Dernière action lancez votre serveur de dev. Pour quitter un simple ^ctrl c suf
 l'url http://localhost avec votre navigateur.
 
     $ mv project-tmp/* .; mv project-tmp/.* .;rm -r project-tmp
-    $ docker run --rm -p 8000:8000 -ti --name symfony -u $UID:$GROUPS -v `pwd`:/opt/project -w /opt/project php:7.2-cli-symfony
+    $ docker run --rm -p 8000:8000 -ti --name symfony -u $UID:$GROUPS -v `pwd`:/opt/project -w /opt/project php-symfony
     
 Optionnellement vous pouvez installer les des outils complémentaires
 
-    $ docker run --rm -p 8000:8000 -ti --name symfony -u $UID:$GROUPS -v `pwd`:/opt/project -w /opt/project php:7.2-cli-symfony composer require server --dev
+    $ docker run --rm -p 8000:8000 -ti --name symfony -u $UID:$GROUPS -v `pwd`:/opt/project -w /opt/project php-symfony composer require server --dev
 ### RUN/DEBUG 
 Le container docker créé ci-dessus éxécute par défaut la commande `php -S 0.0.0.0:8000 -t public` en fin de script. Cela
 lance le serveur web interne de php sur le port 8000 à l'écoute de toute les interfaces de votre poste de développement, 
@@ -55,7 +55,7 @@ Pour utiliser l'ensemble des outils de symfony un interpreteur de commande est d
 en mode serveur interne est trop limitatif, pour se faire il suffit de lancer votre container avec la commande qui vous
 intéresse exemple : 
 
-    $ docker run --rm -ti --name symfony_clear_cache -u $UID:$GROUPS -v `pwd`:/opt/project php:7.2-cli-symfony php bin/console clear:cache
+    $ docker run --rm -ti --name symfony_clear_cache -u $UID:$GROUPS -v `pwd`:/opt/project php-symfony php bin/console clear:cache
     
 et ce sans arrêter l'éxécution de votre précédent container, (en gardant votre serveur web actif !).
  Vous pouvez exécuter autant de container que vous vouler du moment qu'il n'utise pas les mêmes ressources 

@@ -1,8 +1,8 @@
-FROM php:7.2-cli
+FROM php
 
 # installation de composer
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-RUN php -r "if (hash_file('SHA384', 'composer-setup.php') === '93b54496392c062774670ac18b134c3b3a95e5a5e5c8f1a9f115f203b75bf9a129d5daa8ba6a13e2cc8a1da0806388a8') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+RUN php -r "if (hash_file('SHA384', 'composer-setup.php') === 'a5c698ffe4b8e849a443b120cd5ba38043260d5c4023dbf93e1558871f1f07f58274fc6f4c93bcfd858c6bd0775cd8d1') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
 RUN php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 RUN php -r "unlink('composer-setup.php');"
 
@@ -12,13 +12,12 @@ RUN apt install zip -y
 RUN apt install git -y
 
 RUN apt install libicu-dev -y \
-    && docker-php-ext-install -j$(nproc) intl
+    && docker-php-ext-install -j$(nproc) intl \
+    && docker-php-ext-install -j$(nproc) pcntl
 
-RUN pecl install redis-4.0.1 \
-    && pecl install xdebug-2.6.0 \
+RUN pecl install redis \
+    && pecl install xdebug \
     && docker-php-ext-enable redis xdebug
 
 ENV COMPOSER_HOME /tmp
 WORKDIR /opt/project
-
-CMD php -S 0.0.0.0:8000 -t public
