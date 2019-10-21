@@ -19,5 +19,10 @@ RUN pecl install redis \
     && pecl install xdebug \
     && docker-php-ext-enable redis xdebug
 
+RUN php -r "copy('https://get.symfony.com/cli/installer', '/tmp/installer.sh');";
+RUN bash /tmp/installer.sh
+RUN mv /root/.symfony/bin/symfony /usr/local/bin/symfony
+RUN rm -rf /tmp/installer.sh
+
 ENV COMPOSER_HOME /tmp
 WORKDIR /opt/project
