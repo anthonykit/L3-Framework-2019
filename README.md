@@ -145,3 +145,45 @@ donner les droits en écriture dans `var` pour `www-data` en changeant les permi
 Vous pouvez aussi le faire via l'interface de PhpStorm dans la vue "RemoteHost"
 
 ![change permission phpstorm remote](./img/changePermission.png)
+
+### mysql
+La connection de notre application à un SGBD est nécessaire pour enregistrer les données saisies par l'utilisateur. 
+Le choix du SGBD n'est pas facile et en même temps pas primordial si la quantité de données est faible.
+Par défaut, l'image docker php que nous utilisons contient le driver pour sqlite (pdo_sqlite) c'est un choix possible
+mais sqlite à l'inconvéniant de ne pas accépter des requêtes concurentes et de ne pas disposer de toutes les fonctionnalités
+que l'on peut attendre d'un SGBD, comme la gestion des transactions. Pour nos TPs cela serait amplement suffisant
+mais il est tout à fait possible d'utiliser un SGBD plus riche tel que MySQL, PostgreSQL ...
+Certain étant déjà familié avec MySQL au travers de la suite wamp nous porterons notre choix sur ce dernier.  
+Sa mise en place est relativement facile avec un container docker, comme nous allons le voir
+
+    $ docker pull mysql
+    $ docker run -d -p 3306:3306 --name db -e MYSQL_ROOT_PASSWORD=pw mysql
+
+Cela va nous donner une instance de mysql dans un container docker que nous avons nommé db. Remarquez la variable
+d'environnement MYSQL_ROOT_PASSWORD fixer à "pw" pour fixer un mot de passe à l'utilisateur root et nous permettre 
+d'accéder au service. De même, il peut être utile de demander la création d'une base de donnée au lancement
+ 
+    $ docker run -d -p 3306:3306 --name db -e MYSQL_ROOT_PASSWORD=pw -e MYSQL_DATABASE=appDB -v `pwd`/conf.d:/etc/mysql/conf.d mysql
+    
+Il faut ensuite indiquer quelle methode d'autentification on va utiliser
+
+    $ docker run -d -p 3306:3306 --name db -e MYSQL_ROOT_PASSWORD=pw -e MYSQL_DATABASE=appDB mysql --default-authentication-plugin=mysql_native_password
+
+Pour tester si tout fonction vous pouvez exécuter le code suivant,   
+ATTENTION, l'IP spécifier est celle de votre container pour avoir les informations vous pouvez faire un `docker inspect db` vous aurez l'ip de votre container db
+
+    $dsn = 'mysql:dbname=appDB;host=172.17.0.2';
+    $user = 'root';
+    $password = 'pw';
+    
+    try {
+        $dbh = new PDO($dsn, $user, $password);
+        print("Connection réussit\n");
+    } catch (PDOException $e) {
+        echo $e->getTraceAsString()."\n\n";
+        echo 'Connection échouée : ' . $e->getMessage().PHP_EOL;
+    }
+    
+Pour garder les données de la base
+
+    $ docker run -d -p 3306:3306 --name db -e MYSQL_ROOT_PASSWORD=pw -e MYSQL_DATABASE=appDB -v "$PWD/data":/var/lib/mysql mysql --default-authentication-plugin=mysql_native_password
