@@ -13,7 +13,8 @@ RUN apt install git -y
 
 RUN apt install libicu-dev -y \
     && docker-php-ext-install -j$(nproc) intl \
-    && docker-php-ext-install -j$(nproc) pcntl
+    && docker-php-ext-install -j$(nproc) pcntl \
+    && docker-php-ext-install -j$(nproc) pdo_mysql
 
 RUN pecl install redis \
     && pecl install xdebug \
