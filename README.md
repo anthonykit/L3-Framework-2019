@@ -14,6 +14,13 @@ de créer un projet et ses dépendances. On choisira par exemple un squelette mi
 
     $ docker build -t php-symfony .
     
+#### Création du projet en Symfony 5
+Symfony 5 est livré avec un utilitaire vous facilitant de nombreuses opérations de bases, comme par exemple la 
+création du squelette d'une application symfony (remplacer my_project_name par le nom de votre projet)
+
+    $ symfony new my_project_name --full 
+
+#### Création du projet en Symfony 4
 De cette image vous lancerez la création d'un projet en utilisant un script de composer officiel. En partant d'un projet
 vide vous n'auriez rencontrer qucun problème. Mais en partant d'un clone de ce dépôt votre dossier versionné n'est pas 
 vide il contient le Dockerfile, le README et le .git, nous allons donc créer le projet dans un nouveau dossier vide 
